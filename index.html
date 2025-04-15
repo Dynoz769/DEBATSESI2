@@ -1,0 +1,896 @@
+<!DOCTYPE html>
+<html lang="ms">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Portal Kelas Perbahasan</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: #f5f5f5;
+            color: #333;
+        }
+        
+        header {
+            background-color: #00695c;
+            color: white;
+            padding: 20px;
+            text-align: center;
+        }
+        
+        .logo {
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+        
+        .subtitle {
+            font-size: 16px;
+        }
+        
+        nav {
+            background-color: #004d40;
+            padding: 10px 0;
+        }
+        
+        nav ul {
+            display: flex;
+            justify-content: center;
+            list-style-type: none;
+        }
+        
+        nav ul li {
+            margin: 0 15px;
+        }
+        
+        .tab-link {
+            color: white;
+            text-decoration: none;
+            padding: 8px 15px;
+            border-radius: 4px;
+            transition: background-color 0.3s;
+        }
+        
+        .tab-link:hover {
+            background-color: #00796b;
+        }
+        
+        .tab-link.active {
+            background-color: #009688;
+            font-weight: bold;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 20px auto;
+            padding: 0 20px;
+        }
+        
+        .tab-content {
+            display: none;
+            padding: 20px;
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        
+        .tab-content.active {
+            display: block;
+        }
+        
+        .class-container {
+            margin-bottom: 30px;
+        }
+        
+        .class-header {
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        
+        .class-header h2 {
+            margin-bottom: 5px;
+            color: #00695c;
+        }
+        
+        .roles-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            justify-content: space-between;
+        }
+        
+        .role-section {
+            flex: 1;
+            min-width: 300px;
+            padding: 15px;
+            border-radius: 8px;
+        }
+        
+        .pembangkang {
+            background-color: #fff8e1;
+            border: 1px solid #ffcc80;
+        }
+        
+        .pencadang {
+            background-color: #e1f5fe;
+            border: 1px solid #81d4fa;
+        }
+        
+        .role-header {
+            text-align: center;
+            margin-bottom: 15px;
+        }
+        
+        .role-header h3 {
+            color: #00695c;
+        }
+        
+        .students-list {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        
+        .student-item {
+            display: flex;
+            align-items: center;
+            background-color: white;
+            padding: 10px;
+            border-radius: 6px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+        
+        .student-avatar {
+            width: 40px;
+            height: 40px;
+            background-color: #00695c;
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            margin-right: 15px;
+        }
+        
+        .student-info {
+            flex: 1;
+        }
+        
+        .student-info h4 {
+            margin-bottom: 3px;
+        }
+        
+        .student-info p {
+            font-size: 14px;
+            color: #666;
+        }
+        
+        .media-button {
+            background-color: #00695c;
+            color: white;
+            border: none;
+            padding: 6px 12px;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        
+        .media-button:hover {
+            background-color: #004d40;
+        }
+        
+        .section-subtitle {
+            margin: 30px 0 15px;
+            color: #00695c;
+            border-bottom: 2px solid #00695c;
+            padding-bottom: 8px;
+        }
+        
+        .video-container {
+            margin-bottom: 30px;
+        }
+        
+        .gallery {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+        
+        .gallery-item {
+            background-color: white;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            position: relative;
+            cursor: pointer;
+            transition: transform 0.3s ease;
+        }
+        
+        .gallery-item:hover {
+            transform: scale(1.03);
+        }
+        
+        .gallery-item img,
+        .gallery-item video {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            display: block;
+        }
+        
+        /* Modal Styles */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.7);
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            animation: fadeIn 0.3s ease;
+        }
+        
+        .modal-content {
+            background-color: white;
+            padding: 20px;
+            border-radius: 12px;
+            max-width: 90%;
+            max-height: 90vh;
+            width: auto;
+            position: relative;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.3);
+            overflow: auto;
+            animation: slideIn 0.3s ease;
+        }
+        
+        .modal-content img,
+        .modal-content video {
+            width: 100%;
+            height: auto;
+            max-height: 70vh;
+            border-radius: 8px;
+            object-fit: contain;
+        }
+        
+        .close-btn {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            font-size: 28px;
+            cursor: pointer;
+            color: #333;
+            transition: color 0.3s;
+        }
+        
+        .close-btn:hover {
+            color: #00695c;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        
+        @keyframes slideIn {
+            from { transform: translateY(-50px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+        
+        @media (max-width: 768px) {
+            .roles-container {
+                flex-direction: column;
+            }
+            
+            .role-section {
+                min-width: 100%;
+                margin-bottom: 20px;
+            }
+            
+            .gallery {
+                grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            }
+            
+            .gallery-item img,
+            .gallery-item video {
+                height: 150px;
+            }
+            
+            .modal-content {
+                width: 95%;
+                padding: 15px;
+            }
+            
+            .modal-content img,
+            .modal-content video {
+                max-height: 60vh;
+            }
+            
+            .close-btn {
+                font-size: 24px;
+                top: 5px;
+                right: 5px;
+            }
+        }
+        
+        @media (min-width: 1200px) {
+            .modal-content {
+                max-width: 1000px;
+            }
+            
+            .modal-content img,
+            .modal-content video {
+                max-height: 80vh;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="logo">Portal Kelas Perbahasan</div>
+        <div class="subtitle">Platform Pembelajaran & Galeri Perbahasan</div>
+    </header>
+    
+    <nav>
+        <ul>
+            <li><a href="#" class="tab-link active" data-tab="sesi-2">Sesi 2</a></li>
+            <li><a href="#" class="tab-link" data-tab="galeri">Galeri</a></li>
+        </ul>
+    </nav>
+    
+    <nav class="additional-nav">
+        <ul>
+            <li><a href="https://t.me/+3hpowvEGqWQxMDdl">DOWNLOAD</a></li>
+        </ul>
+    </nav>
+    
+    <div class="container">
+        <!-- Sesi 2 Tab -->
+        <div class="tab-content active" id="sesi-2">
+            <div class="class-container">
+                <div class="class-header">
+                    <h2>Sesi Kedua</h2>
+                    <p>Jumlah Pelajar: 8 orang</p>
+                </div>
+                
+                <div class="roles-container">
+                    <!-- Pembangkang Sesi 2 -->
+                    <div class="role-section pembangkang">
+                        <div class="role-header">
+                            <h3>Pembangkang (4)</h3>
+                        </div>
+                        <div class="students-list">
+                            <div class="student-item">
+                                <div class="student-avatar">P1</div>
+                                <div class="student-info">
+                                    <h4>Amirul Haikal</h4>
+                                    <p>Moderator Sesi 2</p>
+                                </div>
+                                <button class="media-button" data-student="amirul-haikal">Lihat Media</button>
+                            </div>
+                            <div class="student-item">
+                                <div class="student-avatar">P2</div>
+                                <div class="student-info">
+                                    <h4>Zulfi Hakim</h4>
+                                    <p>Pembangkang Pertama</p>
+                                </div>
+                                <button class="media-button" data-student="zulfi-hakim">Lihat Media</button>
+                            </div>
+                            <div class="student-item">
+                                <div class="student-avatar">P3</div>
+                                <div class="student-info">
+                                    <h4>Abdul Fattah</h4>
+                                    <p>Pembangkang Kedua</p>
+                                </div>
+                                <button class="media-button" data-student="abdul-fattah">Lihat Media</button>
+                            </div>
+                            <div class="student-item">
+                                <div class="student-avatar">P4</div>
+                                <div class="student-info">
+                                    <h4>Adam Iman</h4>
+                                    <p>Pembangkang Ketiga</p>
+                                </div>
+                                <button class="media-button" data-student="adam-iman">Lihat Media</button>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Pencadang Sesi 2 -->
+                    <div class="role-section pencadang">
+                        <div class="role-header">
+                            <h3>Pencadang (4)</h3>
+                        </div>
+                        <div class="students-list">
+                            <div class="student-item">
+                                <div class="student-avatar">C1</div>
+                                <div class="student-info">
+                                    <h4>Irfan Izzudin</h4>
+                                    <p>Penjaga Masa</p>
+                                </div>
+                                <button class="media-button" data-student="irfan-izzudin">Lihat Media</button>
+                            </div>
+                            <div class="student-item">
+                                <div class="student-avatar">C2</div>
+                                <div class="student-info">
+                                    <h4>Nasrul Hakim</h4>
+                                    <p>Pencadang Pertama</p>
+                                </div>
+                                <button class="media-button" data-student="nasrul-hakim">Lihat Media</button>
+                            </div>
+                            <div class="student-item">
+                                <div class="student-avatar">C3</div>
+                                <div class="student-info">
+                                    <h4>Amru Fitri</h4>
+                                    <p>Pencadang Kedua</p>
+                                </div>
+                                <button class="media-button" data-student="amru-fitri">Lihat Media</button>
+                            </div>
+                            <div class="student-item">
+                                <div class="student-avatar">C4</div>
+                                <div class="student-info">
+                                    <h4>Alieff Erfan</h4>
+                                    <p>Pencadang Ketiga</p>
+                                </div>
+                                <button class="media-button" data-student="alieff-erfan">Lihat Media</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <h3 class="section-subtitle">Video Sesi 2</h3>
+            <div class="video-container">
+                <video class="main-video" controls width="100%" height="auto" poster="assets/images/sesi2-poster.jpg">
+                    <source src="video/1.mov" type="video/mp4">
+                    Browser anda tidak menyokong tag video.
+                </video>
+            </div>
+            
+            <h3 class="section-subtitle">Galeri Video Sesi 2</h3>
+            <div class="gallery">
+                <div class="gallery-item" data-type="video" data-src="video/1.mov">
+                    <video muted>
+                        <source src="video/1.mov" type="video/mp4">
+                    </video>
+                </div>
+                <div class="gallery-item" data-type="video" data-src="video/2.mov">
+                    <video muted>
+                        <source src="video/2.mov" type="video/mp4">
+                    </video>
+                </div>
+                <div class="gallery-item" data-type="video" data-src="video/3.mov">
+                    <video muted>
+                        <source src="video/3.mov" type="video/mp4">
+                    </video>
+                </div>
+                <div class="gallery-item" data-type="video" data-src="video/4.mov">
+                    <video muted>
+                        <source src="video/4.mov" type="video/mp4">
+                    </video>
+                </div>
+                <div class="gallery-item" data-type="video" data-src="video/5.mov">
+                    <video muted>
+                        <source src="video/5.mov" type="video/mp4">
+                    </video>
+                </div>
+                <div class="gallery-item" data-type="video" data-src="video/6.mov">
+                    <video muted>
+                        <source src="video/6.mov" type="video/mp4">
+                    </video>
+                </div>
+                <div class="gallery-item" data-type="video" data-src="video/7.mov">
+                    <video muted>
+                        <source src="video/7.mov" type="video/mp4">
+                    </video>
+                </div>
+                <div class="gallery-item" data-type="video" data-src="video/8.mov">
+                    <video muted>
+                        <source src="video/8.mov" type="video/mp4">
+                    </video>
+                </div>
+                <div class="gallery-item" data-type="video" data-src="video/9.mov">
+                    <video muted>
+                        <source src="video/9.mov" type="video/mp4">
+                    </video>
+                </div>
+                <div class="gallery-item" data-type="video" data-src="video/10.mov">
+                    <video muted>
+                        <source src="video/10.mov" type="video/mp4">
+                    </video>
+                </div>
+                <div class="gallery-item" data-type="video" data-src="video/11.mov">
+                    <video muted>
+                        <source src="video/11.mov" type="video/mp4">
+                    </video>
+                </div>
+                <div class="gallery-item" data-type="video" data-src="video/12.mov">
+                    <video muted>
+                        <source src="video/12.mov" type="video/mp4">
+                    </video>
+                </div>
+                <div class="gallery-item" data-type="video" data-src="video/13.mov">
+                    <video muted>
+                        <source src="video/13.mov" type="video/mp4">
+                    </video>
+                </div>
+                <div class="gallery-item" data-type="video" data-src="video/14.mov">
+                    <video muted>
+                        <source src="video/14.mov" type="video/mp4">
+                    </video>
+                </div>
+                <div class="gallery-item" data-type="video" data-src="video/15.mov">
+                    <video muted>
+                        <source src="video/15.mov" type="video/mp4">
+                    </video>
+                </div>
+                <div class="gallery-item" data-type="video" data-src="video/16.mov">
+                    <video muted>
+                        <source src="video/16.mov" type="video/mp4">
+                    </video>
+                </div>
+                <div class="gallery-item" data-type="video" data-src="video/17.mov">
+                    <video muted>
+                        <source src="video/17.mov" type="video/mp4">
+                    </video>
+                </div>
+                <div class="gallery-item" data-type="video" data-src="video/18.mov">
+                    <video muted>
+                        <source src="video/18.mov" type="video/mp4">
+                    </video>
+                </div>
+                <div class="gallery-item" data-type="video" data-src="video/19.mov">
+                    <video muted>
+                        <source src="video/19.mov" type="video/mp4">
+                    </video>
+                </div>
+                <div class="gallery-item" data-type="video" data-src="video/20.mov">
+                    <video muted>
+                        <source src="video/20.mov" type="video/mp4">
+                    </video>
+                </div>
+                <div class="gallery-item" data-type="video" data-src="video/21.mov">
+                    <video muted>
+                        <source src="video/21.mov" type="video/mp4">
+                    </video>
+                </div>
+                <div class="gallery-item" data-type="video" data-src="video/22.mov">
+                    <video muted>
+                        <source src="video/22.mov" type="video/mp4">
+                    </video>
+                </div>
+                <div class="gallery-item" data-type="video" data-src="video/23.mov">
+                    <video muted>
+                        <source src="video/23.mov" type="video/mp4">
+                    </video>
+                </div>
+                <div class="gallery-item" data-type="video" data-src="video/24.mov">
+                    <video muted>
+                        <source src="video/24.mov" type="video/mp4">
+                    </video>
+                </div>
+                <div class="gallery-item" data-type="video" data-src="video/25.mov">
+                    <video muted>
+                        <source src="video/25.mov" type="video/mp4">
+                    </video>
+                </div>
+                <div class="gallery-item" data-type="video" data-src="video/26.mov">
+                    <video muted>
+                        <source src="video/26.mov" type="video/mp4">
+                    </video>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Galeri Tab -->
+        <div class="tab-content" id="galeri">
+            <h2 class="section-title">Galeri Kelas Perbahasan</h2>
+            
+            <h3 class="section-subtitle">Aktiviti & Acara Khas</h3>
+            <div class="gallery" id="main-gallery">
+                <div class="gallery-item" data-type="image" data-src="gambar/1.jpg">
+                    <img src="gambar/1.jpg" alt="Bengkel Perbahasan 1">
+                </div>
+                <div class="gallery-item" data-type="image" data-src="gambar/2.jpg">
+                    <img src="gambar/2.jpg" alt="Pertandingan 1">
+                </div>
+                <div class="gallery-item" data-type="image" data-src="gambar/3.jpg">
+                    <img src="gambar/3.jpg" alt="Lawatan Parlimen 1">
+                </div>
+                <div class="gallery-item" data-type="image" data-src="gambar/4.jpg">
+                    <img src="gambar/4.jpg" alt="Majlis Anugerah 1">
+                </div>
+                <div class="gallery-item" data-type="image" data-src="gambar/5.jpg">
+                    <img src="gambar/5.jpg" alt="Latihan Mingguan 1">
+                </div>
+                <div class="gallery-item" data-type="image" data-src="gambar/6.jpg">
+                    <img src="gambar/6.jpg" alt="Pembentukan Pasukan 1">
+                </div>
+                <div class="gallery-item" data-type="image" data-src="gambar/7.jpg">
+                    <img src="gambar/7.jpg" alt="Bengkel Perbahasan 2">
+                </div>
+                <div class="gallery-item" data-type="image" data-src="gambar/8.jpg">
+                    <img src="gambar/8.jpg" alt="Pertandingan 2">
+                </div>
+                <div class="gallery-item" data-type="image" data-src="gambar/9.jpg">
+                    <img src="gambar/9.jpg" alt="Lawatan Parlimen 2">
+                </div>
+                <div class="gallery-item" data-type="image" data-src="gambar/10.jpg">
+                    <img src="gambar/10.jpg" alt="Majlis Anugerah 2">
+                </div>
+                <div class="gallery-item" data-type="image" data-src="gambar/11.jpg">
+                    <img src="gambar/11.jpg" alt="Latihan Mingguan 2">
+                </div>
+                <div class="gallery-item" data-type="image" data-src="gambar/12.jpg">
+                    <img src="gambar/12.jpg" alt="Pembentukan Pasukan 2">
+                </div>
+                <div class="gallery-item" data-type="image" data-src="gambar/13.jpg">
+                    <img src="gambar/13.jpg" alt="Bengkel Perbahasan 3">
+                </div>
+                <div class="gallery-item" data-type="image" data-src="gambar/14.jpg">
+                    <img src="gambar/14.jpg" alt="Pertandingan 3">
+                </div>
+                <div class="gallery-item" data-type="image" data-src="gambar/15.jpg">
+                    <img src="gambar/15.jpg" alt="Lawatan Parlimen 3">
+                </div>
+                <div class="gallery-item" data-type="image" data-src="gambar/16.jpg">
+                    <img src="gambar/16.jpg" alt="Majlis Anugerah 3">
+                </div>
+                <div class="gallery-item" data-type="image" data-src="gambar/17.jpg">
+                    <img src="gambar/17.jpg" alt="Latihan Mingguan 3">
+                </div>
+                <div class="gallery-item" data-type="image" data-src="gambar/18.jpg">
+                    <img src="gambar/18.jpg" alt="Pembentukan Pasukan 3">
+                </div>
+                <div class="gallery-item" data-type="image" data-src="gambar/19.jpg">
+                    <img src="gambar/19.jpg" alt="Bengkel Perbahasan 4">
+                </div>
+                <div class="gallery-item" data-type="image" data-src="gambar/20.jpg">
+                    <img src="gambar/20.jpg" alt="Pertandingan 4">
+                </div>
+                <div class="gallery-item" data-type="image" data-src="gambar/21.jpg">
+                    <img src="gambar/21.jpg" alt="Lawatan Parlimen 4">
+                </div>
+                <div class="gallery-item" data-type="image" data-src="gambar/22.jpg">
+                    <img src="gambar/22.jpg" alt="Majlis Anugerah 4">
+                </div>
+                <div class="gallery-item" data-type="image" data-src="gambar/23.jpg">
+                    <img src="gambar/23.jpg" alt="Latihan Mingguan 4">
+                </div>
+                <div class="gallery-item" data-type="image" data-src="gambar/24.jpg">
+                    <img src="gambar/24.jpg" alt="Pembentukan Pasukan 4">
+                </div>
+                <div class="gallery-item" data-type="image" data-src="gambar/25.jpg">
+                    <img src="gambar/25.jpg" alt="Bengkel Perbahasan 5">
+                </div>
+                <div class="gallery-item" data-type="image" data-src="gambar/42.jpg">
+                    <img src="gambar/42.jpg" alt="Pembentukan Pasukan 7">
+                </div>
+                <div class="gallery-item" data-type="image" data-src="gambar/27.jpg">
+                    <img src="gambar/27.jpg" alt="Lawatan Parlimen 5">
+                </div>
+                <div class="gallery-item" data-type="image" data-src="gambar/28.jpg">
+                    <img src="gambar/28.jpg" alt="Majlis Anugerah 5">
+                </div>
+                <div class="gallery-item" data-type="image" data-src="gambar/29.jpg">
+                    <img src="gambar/29.jpg" alt="Latihan Mingguan 5">
+                </div>
+                <div class="gallery-item" data-type="image" data-src="gambar/30.jpg">
+                    <img src="gambar/30.jpg" alt="Pembentukan Pasukan 5">
+                </div>
+                <div class="gallery-item" data-type="image" data-src="gambar/31.jpg">
+                    <img src="gambar/31.jpg" alt="Bengkel Perbahasan 6">
+                </div>
+                <div class="gallery-item" data-type="image" data-src="gambar/32.jpg">
+                    <img src="gambar/32.jpg" alt="Pertandingan 6">
+                </div>
+                <div class="gallery-item" data-type="image" data-src="gambar/33.jpg">
+                    <img src="gambar/33.jpg" alt="Lawatan Parlimen 6">
+                </div>
+                <div class="gallery-item" data-type="image" data-src="gambar/34.jpg">
+                    <img src="gambar/34.jpg" alt="Majlis Anugerah 6">
+                </div>
+                <div class="gallery-item" data-type="image" data-src="gambar/35.jpg">
+                    <img src="gambar/35.jpg" alt="Latihan Mingguan 6">
+                </div>
+                <div class="gallery-item" data-type="image" data-src="gambar/36.jpg">
+                    <img src="gambar/36.jpg" alt="Pembentukan Pasukan 6">
+                </div>
+                <div class="gallery-item" data-type="image" data-src="gambar/37.jpg">
+                    <img src="gambar/37.jpg" alt="Bengkel Perbahasan 7">
+                </div>
+                <div class="gallery-item" data-type="image" data-src="gambar/38.jpg">
+                    <img src="gambar/38.jpg" alt="Pertandingan 7">
+                </div>
+                <div class="gallery-item" data-type="image" data-src="gambar/39.jpg">
+                    <img src="gambar/39.jpg" alt="Lawatan Parlimen 7">
+                </div>
+                <div class="gallery-item" data-type="image" data-src="gambar/40.jpg">
+                    <img src="gambar/40.jpg" alt="Majlis Anugerah 7">
+                </div>
+                <div class="gallery-item" data-type="image" data-src="gambar/41.jpg">
+                    <img src="gambar/41.jpg" alt="Latihan Mingguan 7">
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal for Media Display -->
+    <div class="modal" id="mediaModal">
+        <div class="modal-content">
+            <span class="close-btn" id="closeModal">×</span>
+            <div id="modalMedia"></div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Mock student media data (using local files in gambar/ folder)
+            const studentMedia = {
+                'amirul-haikal': [
+                    { type: 'image', src: 'gambar/AMIRUL.jpg' }
+                ],
+                'zulfi-hakim': [
+                    { type: 'image', src: 'gambar/ZULFI.jpg' }
+                ],
+                'abdul-fattah': [
+                    { type: 'image', src: 'gambar/FATTAH.jpg' }
+                ],
+                'adam-iman': [
+                    { type: 'image', src: 'gambar/ADAM.jpg' }
+                ],
+                'irfan-izzudin': [
+                    { type: 'image', src: 'gambar/IRFAN.jpg' }
+                ],
+                'nasrul-hakim': [
+                    { type: 'image', src: 'gambar/NASRUL.jpg' }
+                ],
+                'amru-fitri': [
+                    { type: 'image', src: 'gambar/AMRU.jpg' }
+                ],
+                'alieff-erfan': [
+                    { type: 'image', src: 'gambar/alieff-erfan1.jpg' }
+                ]
+            };
+    
+            // Tab switching functionality
+            const tabLinks = document.querySelectorAll('.tab-link');
+            
+            tabLinks.forEach(link => {
+                link.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    
+                    // Remove active class from all tabs
+                    tabLinks.forEach(tab => tab.classList.remove('active'));
+                    document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
+                    
+                    // Add active class to clicked tab
+                    this.classList.add('active');
+                    
+                    // Show corresponding content
+                    const tabId = this.getAttribute('data-tab');
+                    document.getElementById(tabId).classList.add('active');
+                });
+            });
+            
+            // Modal functionality
+            const modal = document.getElementById('mediaModal');
+            const modalMedia = document.getElementById('modalMedia');
+            const closeModal = document.getElementById('closeModal');
+    
+            function openModal(content) {
+                modalMedia.innerHTML = content;
+                modal.style.display = 'flex';
+                // Ensure videos in modal also trigger single-play logic
+                const modalVideo = modalMedia.querySelector('video');
+                if (modalVideo) {
+                    modalVideo.addEventListener('play', handleVideoPlay);
+                }
+            }
+    
+            closeModal.addEventListener('click', () => {
+                // Pause any playing video in modal when closing
+                const modalVideo = modalMedia.querySelector('video');
+                if (modalVideo && !modalVideo.paused) {
+                    modalVideo.pause();
+                }
+                modal.style.display = 'none';
+                modalMedia.innerHTML = '';
+            });
+    
+            // Close modal when clicking outside
+            window.addEventListener('click', (e) => {
+                if (e.target === modal) {
+                    const modalVideo = modalMedia.querySelector('video');
+                    if (modalVideo && !modalVideo.paused) {
+                        modalVideo.pause();
+                    }
+                    modal.style.display = 'none';
+                    modalMedia.innerHTML = '';
+                }
+            });
+    
+            // Media buttons functionality
+            const mediaButtons = document.querySelectorAll('.media-button');
+            
+            mediaButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    const student = this.getAttribute('data-student');
+                    const media = studentMedia[student] || [];
+                    
+                    if (media.length === 0) {
+                        alert(`Tiada media tersedia untuk ${student}.`);
+                        return;
+                    }
+    
+                    // Display first media item
+                    const item = media[0];
+                    let content = '';
+                    if (item.type === 'image') {
+                        content = `<img src="${item.src}" alt="Media">`;
+                    } else if (item.type === 'video') {
+                        content = `<video controls><source src="${item.src}" type="video/mp4"></video>`;
+                    }
+                    
+                    openModal(content);
+                });
+            });
+            
+            // Single video play functionality
+            let currentVideo = null;
+            
+            function handleVideoPlay(event) {
+                const video = event.target;
+                if (currentVideo && currentVideo !== video) {
+                    currentVideo.pause();
+                }
+                currentVideo = video;
+            }
+            
+            // Attach play event listeners to all videos
+            const allVideos = document.querySelectorAll('video');
+            allVideos.forEach(video => {
+                video.addEventListener('play', handleVideoPlay);
+            });
+            
+            // Preview functionality for gallery images
+            const imageItems = document.querySelectorAll('.gallery-item[data-type="image"]');
+            
+            imageItems.forEach(item => {
+                item.addEventListener('click', function() {
+                    const src = this.getAttribute('data-src');
+                    const content = `<img src="${src}" alt="Gallery Image">`;
+                    openModal(content);
+                });
+            });
+            
+            // Preview functionality for gallery videos
+            const videoItems = document.querySelectorAll('.gallery-item[data-type="video"]');
+            
+            videoItems.forEach(item => {
+                item.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const src = this.getAttribute('data-src');
+                    const content = `<video controls><source src="${src}" type="video/mp4"></video>`;
+                    openModal(content);
+                });
+            });
+            
+            // Ensure main video also follows single-play rule
+            const mainVideo = document.querySelector('.main-video');
+            if (mainVideo) {
+                mainVideo.addEventListener('play', handleVideoPlay);
+            }
+        });
+    </script>
+</body>
+</html>
